@@ -24,4 +24,40 @@ function render_routes(data, page = 1) {
 
     // Активация tooltip
     const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstr
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+}
+
+function shortenText(text) {
+    let words = text.split(/\s+/); // Разделение текста на слова
+    if (words.length > 10) {
+        return words.slice(0, 10).join(' ') + '...'; // Возвращение первых 10 слов
+    }
+    let firstPeriodIndex = text.indexOf('.');
+    if (firstPeriodIndex !== -1 && firstPeriodIndex < text.length) {
+        return text.substring(0, firstPeriodIndex + 1); // Возвращение текста до первой точки
+    }
+    return text; // Возвращение полного текста, если он короткий
+}
+
+
+
+function get_routes() {
+    url = new URL(API_ADDRESS + '/api/routes');
+    url.searchParams.set('api_key', API_KEY);
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.responseType = 'json';
+    xhr.send();
+    xhr.onload = function () {
+        if (xhr.status != 200) {
+            alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
+        }
+        render_routes(xhr.response);
+    };
+};
+
+function onLoad() {
+    get_routes();
+}
+
+window.onload = onLoad;
