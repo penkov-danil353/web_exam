@@ -22,7 +22,7 @@ function shortenText(text) {
 function createPageItem(page, isActive = false, isDisabled = false, text = page) {
     return `
         <li class="page-item ${isActive ? 'active' : ''} ${isDisabled ? 'disabled' : ''}">
-            <a class="page-link" href="#routes-list" onclick="changePage(${page})">${text}</a>
+            <a class="page-link" href="#routes-list" onclick="changeRoutesPage(${page})">${text}</a>
         </li>`;
 }
 
@@ -101,6 +101,22 @@ function getRoutes() {
         } else {
             ROUTES_DATA = xhr.response;
             changeRoutesPage(1);
+        }
+    };
+}
+
+function getGuides(routeId) {
+    url = new URL(API_ADDRESS + `/api/routes/${routeId}/guides`);
+    url.searchParams.set('api_key', API_KEY);
+    let xhr = new XMLHttpRequest();
+    xhr.open("GET", url);
+    xhr.responseType = 'json';
+    xhr.send();
+    xhr.onload = function () {
+        if (xhr.status != 200) {
+            alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
+        } else {
+            console.log(xhr.response);
         }
     };
 }
