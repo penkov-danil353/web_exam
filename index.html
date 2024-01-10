@@ -7,12 +7,13 @@
     <title>Московский Переулок</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
-        <a class="navbar-brand d-flex align-items-center" href="#">
+    <nav class="navbar navbar-expand-lg bg-success-subtle">
+        <a class="navbar-brand d-flex align-items-center" href="/">
             <div>
                 <img src="img/logo.png" alt="Логотип" class="logo img-fluid">
             </div>
@@ -26,7 +27,7 @@
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-    
+
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item active">
@@ -35,28 +36,83 @@
             </ul>
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Личный кабинет</a>
+                    <a class="nav-link" href="dashboard.html">Личный кабинет</a>
                 </li>
             </ul>
         </div>
     </nav>
-    
-    <div class="container">
+
+    <div class="container px-5 py-3">
         <div class="row">
-            <div class="col-md-6">
-                <img src="path-to-your-image.jpg" alt="Описание изображения" class="img-fluid">
+            <div class="col-md-5">
+                <img src="img/temple.jpg" alt="Вид на храм Василия Блаженного" class="img-fluid rounded-3">
             </div>
-            <div class="col-md-6">
+            <div class="col-md-7">
                 <div class="text-block">
-                    <h4>Слоган компании</h4>
-                    <p>Текст о компании</p>
+                    <h4>Откройте Москву по-новому!</h4>
+                    <p>Мы специализируемся на пешеходных экскурсиях по Москве, предлагая уникальный опыт погружения в
+                        историю, в культуру и атмосферу этого величественного города. Наши опытные гиды проведут вас по
+                        знаменитым улицам и переулкам, раскрывая секреты и истории, скрытые за фасадами зданий и
+                        тротуарами. Мы приглашаем вас открыть не только великолепные дворцы и музеи, но и малоизвестные
+                        уголки города, где каждый камень дышит историей. Москва — это город с богатым наследием и живой
+                        современностью, где каждый перекрёсток рассказывает свою уникальную историю.
+                        <br>
+                        Мы стремимся показать Москву такой, какой вы её ещё не видели – от величественных памятников
+                        архитектуры до уютных уголков, известных только местным жителям. В наших экскурсиях вы сможете
+                        узнать о местных традициях, попробовать национальную кухню и почувствовать настоящий ритм
+                        московской жизни. «Московский переулок» — это не просто экскурсии, это путешествие в сердце
+                        России, где каждый шаг открывает новую страницу в книге московских чудес.
+                    </p>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="container px-5 py-3">
+        <div class="row text-center">
+            <div class="col">
+                <i class="bi-megaphone fs-1 text-success"></i>
+                <p>Гиды с глубокими знаниями истории</p>
+            </div>
+            <div class="col">
+                <i class="bi-map fs-1 text-success"></i>
+                <p>Маршруты со скрытыми жемчужинами города</p>
+            </div>
+            <div class="col">
+                <i class="bi-tag fs-1 text-success"></i>
+                <p>Лучшие цены в городе</p>
+            </div>
+            <div class="col">
+                <i class="bi-translate fs-1 text-success"></i>
+                <p>Проведение экскурсий на всех языках мира</p>
+            </div>
+            <div class="col">
+                <i class="bi-laptop fs-1 text-success"></i>
+                <p>Быстрое бронирование экскурсий онлайн</p>
+            </div>
+        </div>
+    </div>
+
+
     <div class="container mt-1 px-5" id="routes-list">
         <h2 class="text-center mt-5">Список пешеходных маршрутов</h2>
+
+        <!-- Контейнер для поиска и селектора -->
+        <div class="row my-3">
+            <!-- Поле поиска -->
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Поиск по названиям маршрутов">
+            </div>
+
+            <!-- Селектор основных объектов -->
+            <div class="col-md-6">
+                <select id="mainObjectDropdown" class="form-select">
+                    <option value="">Выберите основной объект</option>
+                    <!-- Опции будут добавлены динамически -->
+                </select>
+            </div>
+        </div>
+
         <table class="table align-text-bottom">
             <thead>
                 <tr>
@@ -66,16 +122,35 @@
                     <th scope="col"> </th>
                 </tr>
             </thead>
-            <tbody id="routes-table-body"> </tbody>
+            <tbody id="routes-table-body">
+                <!-- Таблица будет заполнена динамически -->
+            </tbody>
         </table>
 
         <nav aria-label="Навигация по страницам">
-            <ul class="pagination justify-content-center" id="pagination"> </ul>
+            <ul class="pagination justify-content-center" id="pagination"></ul>
         </nav>
     </div>
 
     <div class="container mt-1 px-5 d-none" id="guides-list">
         <h2 class="text-center mt-5" id="guides-text">Доступные гиды по маршруту</h2>
+        <div class="container my-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <select id="languageFilter" class="form-select">
+                        <option value="">Выберите язык</option>
+                        <!-- Опции языков будут добавлены динамически -->
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <input type="number" id="experienceFrom" class="form-control" placeholder="Опыт работы от (лет)">
+                </div>
+                <div class="col-md-4">
+                    <input type="number" id="experienceTo" class="form-control" placeholder="Опыт работы до (лет)">
+                </div>
+            </div>
+        </div>
+        
         <table class="table align-text-bottom">
             <thead>
                 <tr>
@@ -91,7 +166,35 @@
         </table>
     </div>
 
-    <div class="container mt-1 px-5" id="buyContainer"></div>
+    <div class="container mt-1 px-5 text-center py-4" id="buyContainer"></div>
+
+    <footer class="bg-dark text-white py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <h5>Контактная информация</h5>
+                    <ul class="list-unstyled">
+                        <li>Адрес: ул. Примерная, 123, Москва</li>
+                        <li>Телефон: +7 123 456 7890</li>
+                        <li>Email: info@moscowwalks.ru</li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>Социальные сети</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">Telegram</a></li>
+                        <li><a href="#" class="text-white">VK</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <h5>О нас</h5>
+                    <p>Мы предлагаем экскурсии по Москве на любой вкус и бюджет. Оформляйте заявку, чтобы узнать больше
+                        о великолепной истории и культуре этого города!</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 
     <div class="modal fade" id="orderModal" tabindex="-1" aria-labelledby="OrderModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -124,7 +227,7 @@
                     <div class="mb-3">
                         <label for="timeInput" class="form-label">Время начала:</label>
                         <input type="time" class="form-control" id="timeInput" min="09:00" max="23:00" step="1800">
-                    </div>                    
+                    </div>
                     <!-- Длительность экскурсии -->
                     <div class="mb-3">
                         <label for="durationSelect" class="form-label">Длительность экскурсии:</label>
@@ -144,17 +247,17 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <label class="form-check-label" for="option1">
-                                    <input class="form-check-input" type="checkbox" id="option1" checked>
-                                    <strong>Название опции</strong>
+                                    <input class="form-check-input" type="checkbox" id="option1">
+                                    <strong>Скидка для пенсионеров</strong>
                                 </label>
-                                <p class="small text-muted mb-0">Описание опции</p>
+                                <p class="small text-muted mb-0">Уменьшает цену на 25%</p>
                             </div>
                             <div>
                                 <label class="form-check-label" for="option2">
                                     <input class="form-check-input" type="checkbox" id="option2">
-                                    <strong>Название опции</strong>
+                                    <strong>Транфер до метро</strong>
                                 </label>
-                                <p class="small text-muted mb-0">Описание опции</p>
+                                <p class="small text-muted mb-0">+25% в будние, +30% в выходные</p>
                             </div>
                         </div>
                     </div>
@@ -168,15 +271,15 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-primary" id="sendForm">Отправить</button>
+                    <button type="button" class="btn btn-success" id="sendForm">Отправить</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="alert-container" class="position-fixed bottom-0 end-0 p-3" style="z-index: 1031;">
-        <!-- Alert'ы будут добавлены здесь -->
-      </div>
+    <div id="alert-container" class="position-fixed bottom-0 end-0 p-3">
+        <!-- Контейнер для добавления Alert'ов -->
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"

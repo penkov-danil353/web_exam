@@ -1,3 +1,7 @@
 .logo {
     height: 70px;
 }
+
+#alert-container {
+    z-index: 9999;
+}
