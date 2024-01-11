@@ -64,24 +64,6 @@
         </nav>
     </div>
 
-
-    <div id="infoModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <h2>Информация об экскурсии</h2>
-            <p><strong id="fio">ФИО Гида:</strong></p>
-            <p><strong id="route">Название маршрута:</strong></p>
-            <p><strong id="dataEcs">Дата экскурсии:</strong></p>
-            <p><strong id="timeEcs">Время начала:</strong></p>
-            <p><strong id="durationEcs">Длительность экскурсии:</strong></p>
-            <p><strong id="PeoplesCnt">Количество человек:</strong></p>
-            <h3>Подзаголовок</h3>
-            <p><strong id="Funct">Название опции:</strong> опции</p>
-            <!-- Другие опции здесь -->
-            <p><strong>Стоимость:</strong> число</p>
-        </div>
-    </div>
-
     <div id="alert-container" class="position-fixed bottom-0 end-0 p-3">
         <!-- Контейнер для добавления Alert'ов -->
     </div>
@@ -91,7 +73,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="OrderModalLabel">Оформление заявки</h5>
+                    <h5 class="modal-title" id="OrderModalLabel">Изменение заявки</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -112,17 +94,17 @@
                     <!-- Дата экскурсии -->
                     <div class="mb-3">
                         <label for="dateInput" class="form-label">Дата экскурсии:</label>
-                        <input type="date" class="form-control" id="dateInput">
+                        <input type="date" readonly class="form-control" id="dateInput">
                     </div>
                     <!-- Время начала -->
                     <div class="mb-3">
                         <label for="timeInput" class="form-label">Время начала:</label>
-                        <input type="time" class="form-control" id="timeInput" min="09:00" max="23:00" step="1800">
+                        <input type="time" readonly class="form-control" id="timeInput" min="09:00" max="23:00" step="1800">
                     </div>
                     <!-- Длительность экскурсии -->
                     <div class="mb-3">
                         <label for="durationSelect" class="form-label">Длительность экскурсии:</label>
-                        <select class="form-select" id="durationSelect">
+                        <select readonly class="form-select" id="durationSelect">
                             <option value="1" selected>1 час</option>
                             <option value="2">2 часа</option>
                             <option value="3">3 часа</option>
@@ -131,21 +113,21 @@
                     <!-- Количество человек -->
                     <div class="mb-3">
                         <label for="peopleInput" class="form-label">Количество человек:</label>
-                        <input type="number" class="form-control" id="peopleInput" min="1" max="20" value="1">
+                        <input type="number" readonly class="form-control" id="peopleInput" min="1" max="20" value="1">
                     </div>
                     <!-- Дополнительные опции -->
                     <div class="mb-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
                                 <label class="form-check-label" for="option1">
-                                    <input class="form-check-input" type="checkbox" id="option1">
+                                    <input readonly class="form-check-input" type="checkbox" id="option1">
                                     <strong>Скидка для пенсионеров</strong>
                                 </label>
                                 <p class="small text-muted mb-0">Уменьшает цену на 25%</p>
                             </div>
                             <div>
                                 <label class="form-check-label" for="option2">
-                                    <input class="form-check-input" type="checkbox" id="option2">
+                                    <input readonly class="form-check-input" type="checkbox" id="option2">
                                     <strong>Транфер до метро</strong>
                                 </label>
                                 <p class="small text-muted mb-0">+25% в будние, +30% в выходные</p>
@@ -161,8 +143,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
-                    <button type="button" class="btn btn-success" id="sendForm">Отправить</button>
+                    <button type="button" readonly class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
+                    <button type="button" readonly class="btn btn-success" id="sendForm">Отправить</button>
                 </div>
             </div>
         </div>

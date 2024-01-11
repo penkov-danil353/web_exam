@@ -73,7 +73,7 @@ function getGuideInfo(guideId, callback) {
         if (xhr.status != 200) {
             showAlert(
                 'Произошла критическая ошибка при получении имени гида, ' +
-                 'продолжение работы невозможно', 'danger'
+                'продолжение работы невозможно', 'danger'
             );
         } else {
             callback(xhr.response);
@@ -81,7 +81,7 @@ function getGuideInfo(guideId, callback) {
     };
 }
 
-function openModalWithData(rowElement) {
+function prepareModal(rowElement, onlyForView) {
     // Получение данных из data-атрибутов
     let table = document.getElementById("orderModal");
     const orderId = rowElement.dataset.orderId;
@@ -95,6 +95,13 @@ function openModalWithData(rowElement) {
     const optionFirst = rowElement.dataset.optionFirst === 'true';
     const optionSecond = rowElement.dataset.optionSecond === 'true';
 
+    // Получение имени гида и обновление поля
+    document.getElementById('guideName').value = 'Загрузка...';
+    getGuideInfo(guideId, function (response) {
+        document.getElementById('guideName').value = response.name;
+        table.dataset.pricePerHour = response.pricePerHour;
+    });
+
     // Заполнение данных модального окна
     document.getElementById('routeName').value = ROUTES_DATA[routeId];
     document.getElementById('dateInput').value = date;
@@ -105,15 +112,31 @@ function openModalWithData(rowElement) {
     document.getElementById('option2').checked = optionSecond;
     document.getElementById('totalCost').value = `${price}р`;
 
+    if (onlyForView) {
+        document.getElementById('OrderModalLabel')
+            .textContent = `Заявка номер ${orderId}`;
+        document.getElementById('dateInput').readOnly = true;
+        document.getElementById('timeInput').readOnly = true;
+        document.getElementById('durationSelect').disabled = true;
+        document.getElementById('peopleInput').readOnly = true;
+        document.getElementById('option1').disabled = true;
+        document.getElementById('option2').disabled = true;
+        document.getElementById('sendForm').classList.add('d-none');
+    } else {
+        document.getElementById('OrderModalLabel')
+            .textContent = `Изменение заявки`;
+        document.getElementById('dateInput').readOnly = false;
+        document.getElementById('timeInput').readOnly = false;
+        document.getElementById('durationSelect').disabled = false;
+        document.getElementById('peopleInput').readOnly = false;
+        document.getElementById('option1').disabled = false;
+        document.getElementById('option2').disabled = false;
+        document.getElementById('sendForm').classList.remove('d-none');
+    }
+
     table.dataset.orderId = orderId;
     table.dataset.routeId = routeId;
     table.dataset.guideId = guideId;
-
-    // Получение имени гида и обновление поля
-    getGuideInfo(guideId, function(response) {
-        document.getElementById('guideName').value = response.name;
-        table.dataset.pricePerHour = response.pricePerHour;
-    });
 }
 
 
@@ -165,11 +188,13 @@ function renderOrdersByPage(data, newPage) {
         let buttonCell = document.createElement('td');
         buttonCell.innerHTML = `
             <button type="button" class="btn btn-outline-primary btn-sm"
-                onclick="openModalWithData(this.closest('tr'))"
+                onclick="prepareModal(this.closest('tr'), true)"
                 data-bs-toggle="modal" data-bs-target="#orderModal">
                 <span class="bi bi-eye-fill"></span>
             </button>
-            <button type="button" class="btn btn-outline-secondary btn-sm">
+            <button type="button" class="btn btn-outline-secondary btn-sm"
+                onclick="prepareModal(this.closest('tr'), false)"
+                data-bs-toggle="modal" data-bs-target="#orderModal">
                 <span class="bi bi-pencil-fill"></span>
             </button>
             <button type="button" class="btn btn-outline-danger btn-sm" 
@@ -318,7 +343,7 @@ async function calculatePrice() {
     else if (isBetween(5, peopleCount, 9)) numberOfVisitors = 1000;
     else if (isBetween(1, peopleCount, 4)) numberOfVisitors = 0;
 
-    let totalPrice = (pricePerHour * duration * dayOffMultiplayer) 
+    let totalPrice = (pricePerHour * duration * dayOffMultiplayer)
         + isItMorning + isItEvening + numberOfVisitors;
     totalPrice = totalPrice * option1Multiplayer * option2Multiplayer;
 
@@ -364,9 +389,9 @@ function changeOrder(event) {
         if (xhr.status != 200) {
             showAlert('Произошла ошибка при изменении заявки', 'danger');
         } else {
-            console.log(xhr.response);
             bootstrap.Modal.getInstance(modalElement).hide();
             showAlert('Заявка успешно изменена', 'success');
+            getOrders();
         }
     };
 
