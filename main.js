@@ -26,18 +26,13 @@ function parseItems(inputString) {
     const numberedPattern = /\d+\./; // Нумерованный список (например, "1.")
     const commaOrDashPattern = /,|\s*–\s*/; // Запятая или дефис
 
-    let items = []; // Массив для хранения результатов
+    let items = [];
 
-    // Проверяем, содержит ли строка нумерованный список
     if (numberedPattern.test(inputString)) {
-        // Разбиваем строку по нумерованному формату
         items = inputString.split(numberedPattern);
     } else {
-        // Иначе разбиваем строку по запятой или дефису
         items = inputString.split(commaOrDashPattern);
     }
-
-    // Фильтруем массив, удаляя пустые строки и обрезая пробелы
     return items.filter(item => item.trim() !== "").map(item => item.trim());
 }
 
@@ -90,6 +85,16 @@ function renderRoutesByPage(data, newPage) {
     let end = Math.min(start + 10, data.length);
 
     for (let i = start; i < end; i++) {
+        if (Array.isArray(data[i].coords[0])) {
+            // если массив массивов
+            longitude = data[i].coords[0][0];
+            latitude = data[i].coords[0][1];
+        } else {
+            // если координаты одни
+            longitude = data[i].coords[0];
+            latitude = data[i].coords[1];
+        }
+
         let row = document.createElement('tr');
 
         // Создание ячейки для названия маршрута
@@ -123,10 +128,12 @@ function renderRoutesByPage(data, newPage) {
         // Создание ячейки с кнопкой
         let buttonCell = document.createElement('td');
         let button = document.createElement('button');
-        button.className = 'btn btn-success';
+        button.className = 'btn btn-success route-button';
         button.textContent = 'Выбрать';
         button.dataset.routeId = data[i].id;
         button.dataset.routeName = data[i].name;
+        button.dataset.latitudeCoord = latitude;
+        button.dataset.longitudeCoord = longitude;
         button.addEventListener('click', getGuides);
         buttonCell.appendChild(button);
         row.appendChild(buttonCell);
@@ -142,7 +149,7 @@ function renderRoutesByPage(data, newPage) {
 }
 
 
-function createPageItem(page, isActive = false, 
+function createPageItem(page, isActive = false,
     isDisabled = false, text = page) {
     const li = document.createElement('li');
     li.className = `page-item ${isActive ? 'active' : ''} 
@@ -181,7 +188,7 @@ function renderRoutesPaginationElement(pageCount, currentPage) {
 
     // Кнопка "Следующая"
     pagination.appendChild(
-        createPageItem(currentPage + 1, false, 
+        createPageItem(currentPage + 1, false,
             currentPage === pageCount, '&raquo;')
     );
 }
@@ -195,7 +202,7 @@ function changeRoutesPage(newPage) {
 
 function searchRoutes(e) {
     const searchText = e.target.value.toLowerCase();
-    FILTERED_ROUTES_DATA = searchText ? 
+    FILTERED_ROUTES_DATA = searchText ?
         ROUTES_DATA.filter(
             route => route.name.toLowerCase().includes(searchText))
         : ROUTES_DATA;
@@ -242,7 +249,7 @@ function pluralizeYears(n) {
 }
 
 function prepareForm() {
-    var modalTriggerButton = 
+    var modalTriggerButton =
         document.querySelector("[data-bs-target='#orderModal']");
     var routeId = modalTriggerButton.dataset.routeId;
     var routeName = modalTriggerButton.dataset.routeName;
@@ -253,7 +260,7 @@ function prepareForm() {
     document.getElementById("routeName").value = routeName;
 
     var modalElement = document.getElementById('orderModal');
-    
+
     modalElement.dataset.routeId = routeId;
     modalElement.dataset.guideId = guideId;
     modalElement.dataset.pricePerHour = pricePerHour;
@@ -358,7 +365,7 @@ function renderGuides(data, routeId, routeName) {
 function clearTableHighlight() {
     const rows = document.querySelectorAll('#routes-table-body tr');
     rows.forEach(row => {
-        row.classList.remove('bg-success'); // Удаляем класс у всех строк
+        row.classList.remove('table-success'); // Удаляем класс у всех строк
     });
 }
 
@@ -382,10 +389,8 @@ function getGuides(event) {
             //alert(`Ошибка ${xhr.status}: ${xhr.statusText}`);
             showAlert('Произошла ошибка при получении списка гидов', 'danger');
         } else {
-            // Сброс выделения всех строк перед выделением новой
             clearTableHighlight();
 
-            // Выделяем строку, на кнопку которой нажали
             const tableRow = button.parentNode.parentNode;
             tableRow.classList.add('table-success');
 
@@ -438,12 +443,10 @@ async function calculatePrice() {
     let option1 = document.getElementById('option1').checked;
     let option2 = document.getElementById('option2').checked;
 
-    //let dayOfWeek = dateTime.getDay(); // воскресенье - это 0. почему.
     let hour = dateTime.getHours();
 
     let isThisDayOff = await isDayOff(dateValue);
     let dayOffMultiplayer = isThisDayOff ? 1.5 : 1;
-    //let dayOffMultiplayer = (dayOfWeek == 0 || dayOfWeek == 6) ? 1.5 : 1;
 
     let option1Multiplayer = option1 ? 0.75 : 1;
     if (option2) {
@@ -459,7 +462,7 @@ async function calculatePrice() {
     else if (isBetween(5, peopleCount, 9)) numberOfVisitors = 1000;
     else if (isBetween(1, peopleCount, 4)) numberOfVisitors = 0;
 
-    let totalPrice = (pricePerHour * duration * dayOffMultiplayer) 
+    let totalPrice = (pricePerHour * duration * dayOffMultiplayer)
         + isItMorning + isItEvening + numberOfVisitors;
     totalPrice = totalPrice * option1Multiplayer * option2Multiplayer;
 
@@ -517,26 +520,13 @@ function filterGuides(data) {
     const experienceTo = document.getElementById('experienceTo').value;
 
     return data.filter(guide => {
-        const languageMatch = 
+        const languageMatch =
             selectedLanguage ? guide.language === selectedLanguage : true;
         const experienceMatch = guide.workExperience >= (experienceFrom || 0) &&
             guide.workExperience <= (experienceTo || Infinity);
         return languageMatch && experienceMatch;
     });
 }
-
-function applyFilters() {
-    // Вызовите здесь функцию getGuides или renderGuides с фильтрацией данных
-    // Для примера предполагаем, что данные гидов хранятся в переменной guidesData
-    renderGuides(filterGuides(GUIDES_DATA), currentRouteId, currentRouteName);
-}
-
-document.getElementById('languageFilter')
-    .addEventListener('change', applyFilters);
-document.getElementById('experienceFrom')
-    .addEventListener('input', applyFilters);
-document.getElementById('experienceTo')
-    .addEventListener('input', applyFilters);
 
 
 document.getElementById('mainObjectDropdown')
@@ -554,3 +544,83 @@ document.getElementById('option2').addEventListener('change', calculatePrice);
 document.getElementById('sendForm').addEventListener("click", createOrder);
 
 window.onload = getRoutes;
+
+
+
+function initMap() {
+    const geocoder = new google.maps.Geocoder();
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 10,
+        center: { lat: 55.7522, lng: 37.6156 },
+    });
+
+    directionsRenderer.setMap(map);
+    
+    const button = document.getElementById("submitSearchAddress");
+    button.addEventListener("click", () => {
+        geocodeAddress(geocoder, map);
+        document.getElementById("submitSearchAddress").disabled = true;
+        document.getElementById("searchAddressInput").readOnly = true;
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target.classList.contains('route-button')) {
+            const button = event.target;
+            const lat = parseFloat(button.getAttribute('data-latitude-coord'));
+            const lng = parseFloat(button.getAttribute('data-longitude-coord'));
+    
+            setDestinationAndCalculateRoute(
+                directionsService, directionsRenderer, lat, lng
+            );
+        }
+    });
+
+}
+
+function geocodeAddress(geocoder, map) {
+    geocoder
+        .geocode({
+            address: document.getElementById("searchAddressInput").value,
+            componentRestrictions: {
+                country: "RU"
+            },
+        })
+        .then(({ results }) => {
+            map.setCenter(results[0].geometry.location);
+            new google.maps.Marker({
+                map,
+                position: results[0].geometry.location,
+                title: "Вы здесь",
+                label: "A",
+            });
+        })
+        .catch((e) =>
+            alert("Geocode was not successful for the following reason: " + e),
+        );
+}
+
+
+function setDestinationAndCalculateRoute(
+    directionsService, directionsRenderer, lat, lng
+) {
+    if (!document.getElementById('submitSearchAddress').disabled) {
+        return;
+    }
+    const destination = new google.maps.LatLng(lat, lng);
+    const origin = document.getElementById("searchAddressInput").value;
+
+    directionsService.route({
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode.WALKING,
+    })
+        .then((response) => {
+            directionsRenderer.setDirections(response);
+        })
+        .catch((e) => alert("Directions request failed due to " + e.message));
+}
+
+
+window.initMap = initMap;

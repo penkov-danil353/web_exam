@@ -5,3 +5,8 @@
 #alert-container {
     z-index: 9999;
 }
+
+#map {
+    width: 100%;
+    height: 400px;
+}

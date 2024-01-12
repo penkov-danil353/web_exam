@@ -241,7 +241,7 @@ function renderOrdersPaginationElement(pageCount, currentPage) {
     const pagination = document.getElementById('pagination');
     pagination.innerHTML = '';
 
-    // Кнопка "Предыдущая"
+    // Кнопка "«"
     pagination.appendChild(
         createPageItem(currentPage - 1, false, currentPage === 1, '&laquo;')
     );
@@ -253,7 +253,7 @@ function renderOrdersPaginationElement(pageCount, currentPage) {
         pagination.appendChild(createPageItem(i, i === currentPage));
     }
 
-    // Кнопка "Следующая"
+    // Кнопка "»"
     pagination.appendChild(createPageItem(
         currentPage + 1, false, currentPage === pageCount, '&raquo;')
     );
@@ -322,12 +322,10 @@ async function calculatePrice() {
     let option1 = document.getElementById('option1').checked;
     let option2 = document.getElementById('option2').checked;
 
-    //let dayOfWeek = dateTime.getDay(); // воскресенье - это 0. почему.
     let hour = dateTime.getHours();
 
     let isThisDayOff = await isDayOff(dateValue);
     let dayOffMultiplayer = isThisDayOff ? 1.5 : 1;
-    //let dayOffMultiplayer = (dayOfWeek == 0 || dayOfWeek == 6) ? 1.5 : 1;
 
     let option1Multiplayer = option1 ? 0.75 : 1;
     if (option2) {
@@ -353,13 +351,14 @@ async function calculatePrice() {
 
 function changeOrder(event) {
     const xhr = new XMLHttpRequest();
-    const FD = new FormData();
+    //const FD = new FormData();
     let orderId = document.getElementById('orderModal').dataset.orderId;
     console.log(event);
     url = new URL(API_ADDRESS + `/api/orders/${orderId}`);
     url.searchParams.set('api_key', API_KEY);
 
     let modalElement = document.getElementById('orderModal');
+    const FD = new FormData();
     FD.append("guide_id", modalElement.dataset.guideId);
     FD.append("route_id", modalElement.dataset.routeId);
     FD.append("date", document.getElementById('dateInput').value);
